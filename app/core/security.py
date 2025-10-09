@@ -6,6 +6,11 @@ from passlib.context import CryptContext
 
 from app.core.config import settings
 
+ACCESS_TOKEN_TYPE = "access"
+REFRESH_TOKEN_TYPE = "refresh"
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES 
+REFRESH_TOKEN_EXPIRE_DAYS = 7
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -18,17 +23,16 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
-    """Creates a signed JSON Web Token."""
+def create_token(token_type: str, user_id: int, expires_delta: timedelta) -> str:
+    """
+    Generates a signed JWT with specified type and expiration.
+    This function is reusable for both Access and Refresh tokens.
+    """
+    to_encode: dict[str, Any] = {"user_id": user_id, "type": token_type}
     
-    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + expires_delta
     
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    
-    to_encode.update({"exp": expire, "sub": str(data["user_id"])})
+    to_encode.update({"exp": expire, "sub": str(user_id)})
     
     encoded_jwt = jwt.encode(
         to_encode, 
@@ -36,3 +40,18 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
         algorithm=settings.ALGORITHM
     )
     return encoded_jwt
+
+
+def create_access_token(user_id: int) -> str:
+    return create_token(
+        token_type=ACCESS_TOKEN_TYPE,
+        user_id=user_id,
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
+
+def create_refresh_token(user_id: int) -> str:
+    return create_token(
+        token_type=REFRESH_TOKEN_TYPE,
+        user_id=user_id,
+        expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    )

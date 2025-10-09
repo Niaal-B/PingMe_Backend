@@ -5,7 +5,11 @@ from datetime import timedelta
 from app.db.models import User
 from app.api.schemas import UserCreate, UserLogin, Token
 from app.repository.user_repo import UserRepository
-from app.core.security import hash_password, verify_password, create_access_token
+from app.core.security import (
+                    hash_password, 
+                    verify_password, 
+                    create_access_token,
+                    create_refresh_token)
 from app.core.config import settings
 
 class AuthService:
@@ -33,7 +37,7 @@ class AuthService:
     async def authenticate_user(self, user_in: UserLogin) -> Token:
         """Authenticates user and returns an access token upon success."""
         
-        user = await self.user_repo.get_user_by_email(user_in.email)
+        user = await self.user_repo.get_user_by_email_or_name(user_in.email,"")
         
         if not user:
             raise HTTPException(
@@ -46,8 +50,14 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid credentials."
             )
+        
+        user_id = user.id
+        
+        access_token = create_access_token(user_id)
+        
+        refresh_token = create_refresh_token(user_id)
 
-        access_token_data = {"user_id": user.id}
-        access_token = create_access_token(access_token_data)
-
-        return Token(access_token=access_token)
+        return Token(
+            access_token=access_token,
+            refresh_token=refresh_token
+        )
