@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from jose import jwt
+from jose import jwt,JWTError
 from passlib.context import CryptContext
 
 from app.core.config import settings
@@ -55,3 +55,20 @@ def create_refresh_token(user_id: int) -> str:
         user_id=user_id,
         expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     )
+
+
+def decode_token(token: str) -> dict[str, Any] | None:
+    """
+    Decodes and validates a JWT token.
+    Returns the payload if valid, otherwise returns None.
+    """
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
+        )
+        return payload
+    except JWTError:
+
+        return None
