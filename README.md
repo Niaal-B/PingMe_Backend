@@ -1,4 +1,4 @@
-# 🚀 PingMe Backend API
+# PingMe Backend API
 
 **PingMe** is a lightning-fast, real-time chat backend built with **FastAPI**.  
 It’s designed for modern web apps that need speed, scalability, and clean architecture — powered by async Python, PostgreSQL, and Redis.
