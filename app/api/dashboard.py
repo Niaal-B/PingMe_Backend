@@ -13,8 +13,12 @@ def get_dashboard_data(
     Returns personalized data only if the user is successfully authenticated.
     """
     return {
-        "message": f"Welcome to the PingMe Dashboard, {current_user.username}!",
+        "username": current_user.username,
         "user_id": current_user.id,
         "email": current_user.email,
         "status": "Authenticated"
     }
+
+
+
+
