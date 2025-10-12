@@ -14,7 +14,7 @@ class RoomService:
                 detail="A room with this name already exists."
             )
         
-        new_room = await self.room_repo.create_room(name=name)
+        new_room = await self.room_repo.create_room(name=name,creator_id=user.id)
         return new_room
 
     async def get_available_rooms(self) -> list[Room]:

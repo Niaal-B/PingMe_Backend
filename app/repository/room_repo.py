@@ -6,8 +6,8 @@ class RoomRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create_room(self, name: str) -> Room:
-        db_room = Room(name=name)
+    async def create_room(self, name: str,creator_id: int) -> Room:
+        db_room = Room(name=name,creator_id=creator_id)
         self.session.add(db_room)
         await self.session.commit()
         await self.session.refresh(db_room)
