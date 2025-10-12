@@ -28,3 +28,13 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     access_token: str
     refresh_token: str 
+
+class RoomCreate(BaseModel):
+    name: str 
+
+class RoomResponse(BaseModel):
+    id: int
+    name: str
+    
+    class Config:
+        from_attributes = True
