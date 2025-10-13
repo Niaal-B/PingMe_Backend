@@ -46,3 +46,4 @@ cd pingme-backend
 Swagger Docs: http://localhost:8000/docs
 
 Root Endpoint: http://localhost:8000/
+
