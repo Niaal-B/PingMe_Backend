@@ -3,10 +3,15 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.api import auth ,dashboard,rooms
+from contextlib import asynccontextmanager
+from app.api import auth ,dashboard,rooms,chat,websocket_test
+import asyncio
 
 load_dotenv()
+
+
+    
+
 
 app = FastAPI(
     title="PingMe API",
@@ -30,6 +35,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(rooms.router)
+app.include_router(websocket_test.router)
+
 
 @app.get("/")
 def read_root():
