@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import auth
+from app.routers import auth,room
 from app.dependencies.auth import get_current_user
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -24,3 +24,5 @@ def read_root():
 
 
 app.include_router(auth.router)
+app.include_router(room.router)
+

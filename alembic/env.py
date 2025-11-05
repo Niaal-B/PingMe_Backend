@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Load models and Base
 from app.database import Base
-from app.models import user  # Import all your models here
+from app.models import user,room  # Import all your models here
 
 # Alembic Config object
 config = context.config
