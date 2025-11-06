@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.schemas.room import RoomCreate, RoomOut
 from app.dependencies.auth import get_current_user
-from app.services.room_service import create_room_service,get_all_rooms_service
+from app.services.room_service import create_room_service,get_all_rooms_service,get_my_rooms_service
 from app.database import get_db
 from typing import List
 
@@ -22,4 +22,12 @@ def get_all_rooms(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    return get_all_rooms_service(db)
+    return get_all_rooms_service(db,current_user.id)
+
+
+@router.get("/my")
+def get_my_rooms_endpoint(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return get_my_rooms_service(db, current_user.id)

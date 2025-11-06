@@ -19,5 +19,20 @@ def create_room(db: Session, room_data: RoomCreate, user_id: int) -> Room:
     return new_room
 
 
-def get_all_rooms(db: Session) -> List[Room]:
-    return db.query(Room).order_by(Room.created_at.desc()).all()
+def get_all_rooms(db: Session, user_id: int, skip: int = 0, limit: int = 10) -> List[Room]:
+    return (
+        db.query(Room)
+        .filter(Room.created_by != user_id)
+        .order_by(Room.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+def get_my_rooms(db: Session, user_id: int) -> List[Room]:
+    return (
+        db.query(Room)
+        .filter(Room.created_by == user_id)
+        .order_by(Room.created_at.desc())
+        .all()
+    )
