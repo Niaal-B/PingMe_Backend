@@ -36,3 +36,12 @@ def get_my_rooms(db: Session, user_id: int) -> List[Room]:
         .order_by(Room.created_at.desc())
         .all()
     )
+
+
+def delete_room(db: Session, room_id: int, user_id: int):
+    room = db.query(Room).filter(Room.id == room_id, Room.created_by == user_id).first()
+    if not room:
+        return None
+    db.delete(room)
+    db.commit()
+    return room
