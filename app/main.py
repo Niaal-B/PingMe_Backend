@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.routers import auth,room
 from app.dependencies.auth import get_current_user
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers.ws_chat import router as ws_chat_router
 
 app = FastAPI(title="FastAPI Chat App")
 
@@ -25,4 +26,4 @@ def read_root():
 
 app.include_router(auth.router)
 app.include_router(room.router)
-
+app.include_router(ws_chat_router)
