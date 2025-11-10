@@ -8,7 +8,8 @@ from typing import List
 
 router = APIRouter(prefix="/rooms", tags=["Rooms"])
 
-@router.post("/", response_model=RoomOut)
+
+@router.post("", response_model=RoomOut)
 def create_new_room(
     room_data: RoomCreate,
     db: Session = Depends(get_db),
@@ -17,7 +18,7 @@ def create_new_room(
     return create_room_service(db, room_data, current_user.id)
 
 
-@router.get("/", response_model=List[RoomOut])
+@router.get("", response_model=List[RoomOut])
 def get_all_rooms(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
