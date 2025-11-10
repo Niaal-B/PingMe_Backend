@@ -17,5 +17,5 @@ COPY ./alembic ./alembic
 # Expose port
 EXPOSE $PORT
 
-# Run FastAPI app
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Run migrations and start app
+CMD sh -c "echo 'Running database migrations...' && alembic upgrade head && echo 'Migrations completed. Starting server...' && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
